@@ -2,34 +2,58 @@ import React from 'react';
 
 import whatsappIcon from '../../assets/images/icons/whatsapp.svg';
 
+import api from '../../services/api';
+
 import './styles.css';
 
-function TeacherItem() {
+export interface Teacher {
+  id: number;
+  subject: string;
+  cost: number;
+  user_id: number;
+  name: string;
+  avatar: string;
+  whatsapp: string;
+  bio: string;
+}
+
+interface TeacherItemProps {
+  teacher: Teacher;
+}
+
+const TeacherItem: React.FC<TeacherItemProps> = ({ teacher }) => {
+  function handleCreateNewConnection() {
+    api.post('connections', {
+      user_id: teacher.user_id
+    });
+  }
+
   return (
     <article className="teacher-item">
       <header>
-        <img src="https://avatars3.githubusercontent.com/u/41995760?s=460&u=59d4cc20b34349fba889a0236724ad2d4e51606f&v=4" alt="Flávio Brusamolin" />
+        <img src={teacher.avatar} alt={teacher.name} />
         <div>
-          <strong>Flávio Brusamolin</strong>
-          <span>Matemática</span>
+          <strong>{teacher.name}</strong>
+          <span>{teacher.subject}</span>
         </div>
       </header>
 
-      <p>
-        Desenvolvedor de Software graduando em Engenharia de Computação.
-      <br /><br />
-      Utilizo as minhas competências para construir aplicações confiáveis, escaláveis e de alta performance.
-    </p>
+      <p>{teacher.bio}</p>
 
       <footer>
         <p>
           Preço/hora
-        <strong>R$ 80,00</strong>
+          <strong>R$ {teacher.cost}</strong>
         </p>
-        <button type="button">
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={handleCreateNewConnection}
+          href={`https://wa.me/${teacher.whatsapp}`}
+        >
           <img src={whatsappIcon} alt="Whatsapp" />
-        Entrar em contato
-      </button>
+          Entrar em contato
+        </a>
       </footer>
     </article>
   );
